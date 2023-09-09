@@ -21,9 +21,9 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddScoped(typeof(IRepository<Employee>), (x) => 
+            services.AddSingleton(typeof(IRepository<Employee>), (x) => 
                 new InMemoryRepository<Employee>(FakeDataFactory.Employees));
-            services.AddScoped(typeof(IRepository<Role>), (x) => 
+            services.AddSingleton(typeof(IRepository<Role>), (x) => 
                 new InMemoryRepository<Role>(FakeDataFactory.Roles));
 
             services.AddOpenApiDocument(options =>

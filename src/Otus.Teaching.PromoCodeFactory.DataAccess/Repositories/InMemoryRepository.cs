@@ -30,17 +30,17 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Repositories
 
         public async Task CreateAsync(T item)
         {
-            await Task.Run(() => Data.Append(item));
+            await Task.Run(() => Data = Data.Append(item));
         }
 
         public async Task UpdateAsync(T item)
         {
-            await Task.Run(() => Data.Append(item));
+            await Task.Run(() => Data = Data.Where(x => x.Id != item.Id).Append(item));
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            return Task.FromResult(0);
+            await Task.Run(() => Data = Data.Where(x => x.Id != id));
         }
     }
 }
