@@ -13,6 +13,5 @@ namespace Otus.Teaching.PromoCodeFactory.Core.Abstractions.Repositories
         Task CreateAsync(T item); // создание объекта
         Task UpdateAsync(T item); // обновление объекта
         Task DeleteAsync(Guid id); // удаление объекта по id
-        Task SaveAsync();  // сохранение изменений
     }
 }
