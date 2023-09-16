@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Otus.Teaching.PromoCodeFactory.Core.Abstractions.Repositories;
@@ -47,7 +45,7 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
         }
         
         /// <summary>
-        /// Получить данные сотрудника по Id
+        /// Получить данные сотрудника по id
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id:guid}")]
@@ -57,54 +55,21 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
 
             if (employee == null)
                 return NotFound();
-            
+
             var employeeModel = new EmployeeResponse()
             {
                 Id = employee.Id,
                 Email = employee.Email,
-                Roles = employee.Roles.Select(x => new RoleItemResponse()
+                Role = new RoleItemResponse()
                 {
-                    Name = x.Name,
-                    Description = x.Description
-                }).ToList(),
+                    Name = employee.Role.Name,
+                    Description = employee.Role.Description
+                },
                 FullName = employee.FullName,
                 AppliedPromocodesCount = employee.AppliedPromocodesCount
             };
 
             return employeeModel;
-        }
-
-        /// <summary>
-        /// Создать сотрудника
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public HttpResponseMessage CreateEmployee(Employee employee)
-        {
-            _employeeRepository.CreateAsync(employee);
-            return new HttpResponseMessage(HttpStatusCode.Created);
-        }
-
-        /// <summary>
-        /// Обновить сотрулника
-        /// </summary>
-        /// <returns></returns>
-        [HttpPut]
-        public HttpResponseMessage UpdateEmployee(Employee employee)
-        {
-            _employeeRepository.UpdateAsync(employee);
-            return new HttpResponseMessage(HttpStatusCode.OK);
-        }
-
-        /// <summary>
-        /// Удалить сотрулника
-        /// </summary>
-        /// <returns></returns>
-        [HttpDelete]
-        public HttpResponseMessage DeleteEmployee(Guid id)
-        {
-            _employeeRepository.DeleteAsync(id);
-            return new HttpResponseMessage(HttpStatusCode.OK);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<List<RoleItemResponse>> GetRolesAsync()
+        public async Task<IEnumerable<RoleItemResponse>> GetRolesAsync()
         {
             var roles = await _rolesRepository.GetAllAsync();
 
