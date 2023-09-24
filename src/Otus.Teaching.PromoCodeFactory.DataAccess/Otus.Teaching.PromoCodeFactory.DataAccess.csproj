@@ -1,8 +1,44 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="Migrations\20230924060745_init.cs" />
+      <Compile Remove="Migrations\20230924060745_init.Designer.cs" />
+      <Compile Remove="Migrations\20230924062329_init.cs" />
+      <Compile Remove="Migrations\20230924062329_init.Designer.cs" />
+      <Compile Remove="Migrations\20230924062633_init.cs" />
+      <Compile Remove="Migrations\20230924062633_init.Designer.cs" />
+      <Compile Remove="Migrations\20230924062720_init.cs" />
+      <Compile Remove="Migrations\20230924062720_init.Designer.cs" />
+      <Compile Remove="Migrations\20230924063053_init.cs" />
+      <Compile Remove="Migrations\20230924063053_init.Designer.cs" />
+      <Compile Remove="Migrations\20230924063147_init.cs" />
+      <Compile Remove="Migrations\20230924063147_init.Designer.cs" />
+      <Compile Remove="Migrations\20230924063704_init.cs" />
+      <Compile Remove="Migrations\20230924063704_init.Designer.cs" />
+      <Compile Remove="Migrations\20230924064238_init.cs" />
+      <Compile Remove="Migrations\20230924064238_init.Designer.cs" />
+      <Compile Remove="Migrations\20230924064339_init.cs" />
+      <Compile Remove="Migrations\20230924064339_init.Designer.cs" />
+      <Compile Remove="Migrations\20230924064413_init.cs" />
+      <Compile Remove="Migrations\20230924064413_init.Designer.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.32" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.32">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.32" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.32">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Otus.Teaching.PromoCodeFactory.Core\Otus.Teaching.PromoCodeFactory.Core.csproj" />

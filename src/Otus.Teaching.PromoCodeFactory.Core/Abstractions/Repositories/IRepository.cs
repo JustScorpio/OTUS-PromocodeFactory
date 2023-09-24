@@ -9,7 +9,10 @@ namespace Otus.Teaching.PromoCodeFactory.Core.Abstractions.Repositories
         where T: BaseEntity
     {
         Task<IEnumerable<T>> GetAllAsync();
-        
         Task<T> GetByIdAsync(Guid id);
+        Task CreateAsync(T entity);
+        Task UpdateAsync(T entity);
+        Task RemoveAsync(Guid id);
+        Task SaveChanges();
     }
 }
