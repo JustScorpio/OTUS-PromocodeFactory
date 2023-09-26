@@ -27,6 +27,10 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
             _customerPreferencesRepository = customerPreferencesRepository;
         }
 
+        /// <summary>
+        /// Получить данные о всех клиентах
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<List<CustomerShortResponse>> GetCustomersAsync()
         {
@@ -43,7 +47,11 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
 
             return customersModelList;
         }
-        
+
+        /// <summary>
+        /// Получить данные клиента по id
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerResponse>> GetCustomerAsync(Guid id)
         {
@@ -77,6 +85,11 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
             return employeeModel;
         }
         
+        /// <summary>
+        /// Завести нового клиента
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateCustomerAsync(CreateOrEditCustomerRequest request)
         {
@@ -102,6 +115,10 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
             return CreatedAtAction(nameof(GetCustomerAsync), new { id = customer.Id }, customer);
         }
         
+        /// <summary>
+        /// Изменить данные о клиенте
+        /// </summary>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> EditCustomersAsync(Guid id, CreateOrEditCustomerRequest request)
         {
@@ -139,6 +156,10 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
             return CreatedAtAction(nameof(GetCustomerAsync), new { id = customer.Id }, customer);
         }
         
+        /// <summary>
+        /// Удалить клиента
+        /// </summary>
+        /// <returns></returns>
         [HttpDelete]
         public async Task<IActionResult> DeleteCustomer(Guid id)
         {

@@ -12,9 +12,9 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true)
+                    FirstName = table.Column<string>(maxLength: 120, nullable: true),
+                    LastName = table.Column<string>(maxLength: 120, nullable: true),
+                    Email = table.Column<string>(maxLength: 120, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -26,7 +26,7 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 120, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -38,8 +38,8 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 120, nullable: true),
+                    Description = table.Column<string>(maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -47,7 +47,7 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomerPreference",
+                name: "CustomerPreferences",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -56,15 +56,15 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerPreference", x => x.Id);
+                    table.PrimaryKey("PK_CustomerPreferences", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CustomerPreference_Customers_CustomerId",
+                        name: "FK_CustomerPreferences_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CustomerPreference_Preferences_PreferenceId",
+                        name: "FK_CustomerPreferences_Preferences_PreferenceId",
                         column: x => x.PreferenceId,
                         principalTable: "Preferences",
                         principalColumn: "Id",
@@ -76,9 +76,9 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(maxLength: 120, nullable: true),
+                    LastName = table.Column<string>(maxLength: 120, nullable: true),
+                    Email = table.Column<string>(maxLength: 120, nullable: true),
                     RoleId = table.Column<Guid>(nullable: true),
                     AppliedPromocodesCount = table.Column<int>(nullable: false)
                 },
@@ -98,11 +98,11 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Code = table.Column<string>(nullable: true),
-                    ServiceInfo = table.Column<string>(nullable: true),
+                    Code = table.Column<string>(maxLength: 120, nullable: true),
+                    ServiceInfo = table.Column<string>(maxLength: 250, nullable: true),
                     BeginDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
-                    PartnerName = table.Column<string>(nullable: true),
+                    PartnerName = table.Column<string>(maxLength: 120, nullable: true),
                     PartnerManagerId = table.Column<Guid>(nullable: false),
                     PreferenceId = table.Column<Guid>(nullable: false),
                     CustomerId = table.Column<Guid>(nullable: false)
@@ -171,13 +171,13 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                 values: new object[] { new Guid("f766e2bf-340a-46ea-bff3-f1700b435895"), 10, "andreev@somemail.ru", "Петр", "Андреев", new Guid("b0ae7aac-5493-45cd-ad16-87426a5e7665") });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerPreference_CustomerId",
-                table: "CustomerPreference",
+                name: "IX_CustomerPreferences_CustomerId",
+                table: "CustomerPreferences",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerPreference_PreferenceId",
-                table: "CustomerPreference",
+                name: "IX_CustomerPreferences_PreferenceId",
+                table: "CustomerPreferences",
                 column: "PreferenceId");
 
             migrationBuilder.CreateIndex(
@@ -204,7 +204,7 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CustomerPreference");
+                name: "CustomerPreferences");
 
             migrationBuilder.DropTable(
                 name: "PromoCodes");

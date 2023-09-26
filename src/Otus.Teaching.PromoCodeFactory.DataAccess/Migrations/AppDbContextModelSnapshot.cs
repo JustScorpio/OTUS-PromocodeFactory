@@ -26,13 +26,16 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(120);
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(120);
 
                     b.Property<string>("LastName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(120);
 
                     b.Property<Guid?>("RoleId")
                         .HasColumnType("TEXT");
@@ -71,10 +74,12 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(250);
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(120);
 
                     b.HasKey("Id");
 
@@ -102,13 +107,16 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(120);
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(120);
 
                     b.Property<string>("LastName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(120);
 
                     b.HasKey("Id");
 
@@ -142,7 +150,7 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
 
                     b.HasIndex("PreferenceId");
 
-                    b.ToTable("CustomerPreference");
+                    b.ToTable("CustomerPreferences");
                 });
 
             modelBuilder.Entity("Otus.Teaching.PromoCodeFactory.Core.Domain.PromoCodeManagement.Preference", b =>
@@ -152,7 +160,8 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(120);
 
                     b.HasKey("Id");
 
@@ -186,7 +195,8 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Code")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(120);
 
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("TEXT");
@@ -198,13 +208,15 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PartnerName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(120);
 
                     b.Property<Guid>("PreferenceId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ServiceInfo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(250);
 
                     b.HasKey("Id");
 

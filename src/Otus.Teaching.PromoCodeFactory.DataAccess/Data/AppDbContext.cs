@@ -13,6 +13,7 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Data
         public DbSet<Role> Roles => Set<Role>();
         public DbSet<Customer> Customers => Set<Customer>();
         public DbSet<Preference> Preferences => Set<Preference>();
+        public DbSet<CustomerPreference> CustomerPreferences => Set<CustomerPreference>();
         public DbSet<PromoCode> PromoCodes => Set<PromoCode>();
         public AppDbContext()
         {
@@ -22,6 +23,8 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Role>().HasData(FakeDataFactory.Roles);
             modelBuilder.Entity<Employee>().HasData(FakeDataFactory.Employees);
             modelBuilder.Entity<Preference>().HasData(FakeDataFactory.Preferences);

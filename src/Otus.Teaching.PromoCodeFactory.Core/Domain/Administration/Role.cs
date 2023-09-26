@@ -13,6 +13,6 @@ namespace Otus.Teaching.PromoCodeFactory.Core.Domain.Administration
         [MaxLength(250)]
         public string Description { get; set; }
 
-        public List<Employee> Employees { get; set; }
+        public virtual List<Employee> Employees { get; set; }
     }
 }

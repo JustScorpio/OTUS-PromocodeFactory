@@ -25,6 +25,18 @@
       <Compile Remove="Migrations\20230924064339_init.Designer.cs" />
       <Compile Remove="Migrations\20230924064413_init.cs" />
       <Compile Remove="Migrations\20230924064413_init.Designer.cs" />
+      <Compile Remove="Migrations\20230924073143_init.cs" />
+      <Compile Remove="Migrations\20230924073143_init.Designer.cs" />
+      <Compile Remove="Migrations\20230925171348_init.cs" />
+      <Compile Remove="Migrations\20230925171348_init.Designer.cs" />
+      <Compile Remove="Migrations\20230925174422_changeSeed.cs" />
+      <Compile Remove="Migrations\20230925174422_changeSeed.Designer.cs" />
+      <Compile Remove="Migrations\20230925174617_init.cs" />
+      <Compile Remove="Migrations\20230925174617_init.Designer.cs" />
+      <Compile Remove="Migrations\20230925192136_init.cs" />
+      <Compile Remove="Migrations\20230925192136_init.Designer.cs" />
+      <Compile Remove="Migrations\20230926180150_added_CustomerPreferences_DbSet.cs" />
+      <Compile Remove="Migrations\20230926180150_added_CustomerPreferences_DbSet.Designer.cs" />
     </ItemGroup>
 
     <ItemGroup>

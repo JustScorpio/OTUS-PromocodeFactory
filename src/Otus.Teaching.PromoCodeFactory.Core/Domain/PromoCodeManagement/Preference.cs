@@ -10,6 +10,6 @@ namespace Otus.Teaching.PromoCodeFactory.Core.Domain.PromoCodeManagement
         [MaxLength(120)]
         public string Name { get; set; }
 
-        public List<CustomerPreference> CustomerPreferences { get; set; } = new List<CustomerPreference>();
+        public virtual List<CustomerPreference> CustomerPreferences { get; set; } = new List<CustomerPreference>();
     }
 }

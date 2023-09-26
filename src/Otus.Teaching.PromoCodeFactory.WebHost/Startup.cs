@@ -31,22 +31,26 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            //services.AddScoped(typeof(IRepository<Employee>), (x) => 
-            //    new InMemoryRepository<Employee>(FakeDataFactory.Employees));
-            //services.AddScoped(typeof(IRepository<Role>), (x) => 
-            //    new InMemoryRepository<Role>(FakeDataFactory.Roles));
-            //services.AddScoped(typeof(IRepository<Preference>), (x) => 
-            //    new InMemoryRepository<Preference>(FakeDataFactory.Preferences));
-            //services.AddScoped(typeof(IRepository<Customer>), (x) => 
-            //    new InMemoryRepository<Customer>(FakeDataFactory.Customers));
 
+            //I DONT KNWO HOW TO AVOID THIZ
             services.AddDbContext<AppDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("SqliteConnectionString")));
+            var contextOptionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+                .UseLazyLoadingProxies()
+                .UseSqlite(Configuration.GetConnectionString("SqliteConnectionString"));
+
+            var context = new AppDbContext(contextOptionsBuilder.Options);
+
+            services.AddSingleton(typeof(IRepository<Employee>), (x) => new EfRepository<Employee>(context));
+            services.AddSingleton(typeof(IRepository<Role>), (x) => new EfRepository<Role>(context));
+            services.AddSingleton(typeof(IRepository<Preference>), (x) => new EfRepository<Preference>(context));
+            services.AddSingleton(typeof(IRepository<Customer>), (x) => new EfRepository<Customer>(context));
+            services.AddSingleton(typeof(IRepository<CustomerPreference>), (x) => new EfRepository<CustomerPreference>(context));
 
             services.AddOpenApiDocument(options =>
-            {
-                options.Title = "PromoCode Factory API Doc";
-                options.Version = "1.0";
-            });
+                {
+                    options.Title = "PromoCode Factory API Doc";
+                    options.Version = "1.0";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,7 +70,7 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost
             {
                 x.DocExpansion = "list";
             });
-            
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

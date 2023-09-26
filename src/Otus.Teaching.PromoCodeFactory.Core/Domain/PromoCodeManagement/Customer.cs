@@ -19,8 +19,8 @@ namespace Otus.Teaching.PromoCodeFactory.Core.Domain.PromoCodeManagement
         [MaxLength(120)]
         public string Email { get; set; }
 
-        public List<PromoCode> PromoCodes { get; set; } = new List<PromoCode>();
+        public virtual List<PromoCode> PromoCodes { get; set; } = new List<PromoCode>();
 
-        public List<CustomerPreference> CustomerPreferences { get; set; } = new List<CustomerPreference>();
+        public virtual List<CustomerPreference> CustomerPreferences { get; set; } = new List<CustomerPreference>();
     }
 }
