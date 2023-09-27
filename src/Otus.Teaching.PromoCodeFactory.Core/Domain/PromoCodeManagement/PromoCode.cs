@@ -15,9 +15,9 @@ namespace Otus.Teaching.PromoCodeFactory.Core.Domain.PromoCodeManagement
         [MaxLength(250)]
         public string ServiceInfo { get; set; }
 
-        public DateTime BeginDate { get; set; }
+        public DateTime BeginDate { get; set; } = DateTime.Now;
 
-        public DateTime EndDate { get; set; }
+        public DateTime EndDate { get; set; } = DateTime.Now.AddDays(30);
 
         [MaxLength(120)]
         public string PartnerName { get; set; }

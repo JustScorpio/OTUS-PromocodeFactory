@@ -9,7 +9,7 @@ using Otus.Teaching.PromoCodeFactory.DataAccess.Data;
 namespace Otus.Teaching.PromoCodeFactory.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230926180245_init")]
+    [Migration("20230927172433_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

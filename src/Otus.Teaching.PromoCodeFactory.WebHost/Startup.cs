@@ -45,6 +45,7 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost
             services.AddSingleton(typeof(IRepository<Preference>), (x) => new EfRepository<Preference>(context));
             services.AddSingleton(typeof(IRepository<Customer>), (x) => new EfRepository<Customer>(context));
             services.AddSingleton(typeof(IRepository<CustomerPreference>), (x) => new EfRepository<CustomerPreference>(context));
+            services.AddSingleton(typeof(IRepository<PromoCode>), (x) => new EfRepository<PromoCode>(context));
 
             services.AddOpenApiDocument(options =>
                 {

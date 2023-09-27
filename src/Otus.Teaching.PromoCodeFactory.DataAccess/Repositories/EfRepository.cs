@@ -38,7 +38,8 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Repositories
 
         public Task UpdateAsync(T entity)
         {
-            var oldEntity = DbContext.Set<T>().Update(entity);
+            var oldEntity = DbContext.Set<T>().FirstOrDefault(x => x.Id == entity.Id);
+            oldEntity = entity;
             return SaveChanges();
         }
 

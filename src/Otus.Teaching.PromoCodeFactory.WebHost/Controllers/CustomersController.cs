@@ -19,12 +19,10 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
         : ControllerBase
     {
         private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerPreference> _customerPreferencesRepository;
 
-        public CustomersController(IRepository<Customer> customerRepository, IRepository<CustomerPreference> customerPreferencesRepository)
+        public CustomersController(IRepository<Customer> customerRepository)
         {
             _customerRepository = customerRepository;
-            _customerPreferencesRepository = customerPreferencesRepository;
         }
 
         /// <summary>
@@ -60,6 +58,7 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
             if (customer == null)
                 return NotFound();
 
+            var preferences = customer.CustomerPreferences;
             var employeeModel = new CustomerResponse()
             {
                 Id = customer.Id,
@@ -75,9 +74,9 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
                     EndDate = x.EndDate.ToString(),
                     PartnerName = x.PartnerName
                 }).ToList(),
-                Preferences = customer.CustomerPreferences.Select(x => new PreferenceResponse()
+                Preferences = preferences.Select(x => new PreferenceResponse()
                 {
-                    Id = x.Id,
+                    Id = x.PreferenceId,
                     Name = x.Preference.Name
                 }).ToList()
             };
@@ -97,22 +96,12 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-                Email = request.Email,
+                Email = request.Email
             };
+            customer.CustomerPreferences = request.PreferenceIds.Select(x => new CustomerPreference() { Customer = customer, PreferenceId = x }).ToList();
+
             await _customerRepository.CreateAsync(customer);
-
-            var tasks = new List<Task>();
-            foreach (var preferenceId in request.PreferenceIds)
-            {
-                var customerPreference = new CustomerPreference();
-                customerPreference.Customer = customer;
-                customerPreference.PreferenceId = preferenceId;
-                //FIXME: new Save after each new customerPreference with current EfRepository implementation
-                tasks.Add(_customerPreferencesRepository.CreateAsync(customerPreference));
-            }
-            await Task.WhenAll(tasks);
-
-            return CreatedAtAction(nameof(GetCustomerAsync), new { id = customer.Id }, customer);
+            return Ok();
         }
         
         /// <summary>
@@ -122,38 +111,21 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> EditCustomersAsync(Guid id, CreateOrEditCustomerRequest request)
         {
-            var tasks = new List<Task>();
+            var customer = await _customerRepository.GetByIdAsync(id);
+            customer.FirstName = request.FirstName;
+            customer.LastName = request.LastName;
+            customer.Email = request.Email;
+            customer.CustomerPreferences
+                .Where(x => !request.PreferenceIds.Contains(x.PreferenceId))
+                .ToList()
+                .ForEach(x => customer.CustomerPreferences.Remove(x));
+            request.PreferenceIds
+                .Where(x => !customer.CustomerPreferences.Any(y => y.PreferenceId == x))
+                .ToList()
+                .ForEach(x => customer.CustomerPreferences.Add(new CustomerPreference() {Customer = customer, PreferenceId = x}));
 
-            var customer = new Customer()
-            {
-                Id = id,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email,
-            };
             await _customerRepository.UpdateAsync(customer);
-
-
-            var existingPreference = (await _customerPreferencesRepository.GetAllAsync())
-                .Where(x => Equals(x.CustomerId, id));
-
-            //Remove absent preferences
-            foreach (var preference in existingPreference.Where(x => !request.PreferenceIds.Contains(x.PreferenceId)))
-                tasks.Add(_customerPreferencesRepository.RemoveAsync(preference.Id));
-            //Add new preferences
-            foreach (var preferenceId in request.PreferenceIds.Where(x => !existingPreference.Any(y => Equals(y.PreferenceId, x))))
-            {
-                var customerPreference = new CustomerPreference()
-                {
-                    Customer = customer,
-                    PreferenceId = preferenceId
-                };
-                tasks.Add(_customerPreferencesRepository.CreateAsync(customerPreference));
-            }
-
-            await Task.WhenAll(tasks);
-
-            return CreatedAtAction(nameof(GetCustomerAsync), new { id = customer.Id }, customer);
+            return Ok();
         }
         
         /// <summary>
@@ -163,17 +135,8 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteCustomer(Guid id)
         {
-            var customer = await _customerRepository.GetByIdAsync(id);
-            var preferences = customer.CustomerPreferences;
-
-            var tasks = new List<Task>();
-
-            foreach (var preference in preferences)
-                tasks.Add(_customerPreferencesRepository.RemoveAsync(preference.Id));
-
-            await Task.WhenAll(tasks);
-
-            return Ok(_customerRepository.RemoveAsync(id));
+            await _customerRepository.RemoveAsync(id);
+            return Ok();
         }
     }
 }
