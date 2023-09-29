@@ -112,6 +112,9 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
         public async Task<IActionResult> EditCustomersAsync(Guid id, CreateOrEditCustomerRequest request)
         {
             var customer = await _customerRepository.GetByIdAsync(id);
+            if (customer == null)
+                return NotFound();
+
             customer.FirstName = request.FirstName;
             customer.LastName = request.LastName;
             customer.Email = request.Email;
@@ -135,6 +138,9 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteCustomer(Guid id)
         {
+            if (_customerRepository.GetByIdAsync(id) == null)
+                return NotFound();
+
             await _customerRepository.RemoveAsync(id);
             return Ok();
         }
