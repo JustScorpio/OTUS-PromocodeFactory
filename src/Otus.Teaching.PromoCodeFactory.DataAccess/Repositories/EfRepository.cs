@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Otus.Teaching.PromoCodeFactory.Core.Abstractions.Repositories;
 using Otus.Teaching.PromoCodeFactory.Core.Domain;
-using Otus.Teaching.PromoCodeFactory.DataAccess.Data;
 
 namespace Otus.Teaching.PromoCodeFactory.DataAccess.Repositories
 {
@@ -13,46 +12,49 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Repositories
         : IRepository<T>
         where T: BaseEntity
     {
-        protected AppDbContext DbContext;
+        private readonly DataContext _dataContext;
 
-        public EfRepository(AppDbContext dbContext)
+        public EfRepository(DataContext dataContext)
         {
-            DbContext = dbContext;
+            _dataContext = dataContext;
         }
         
-        public Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return Task.FromResult(DbContext.Set<T>().AsEnumerable<T>());
+            var entities = await _dataContext.Set<T>().ToListAsync();
+
+            return entities;
         }
 
-        public Task<T> GetByIdAsync(Guid id)
+        public async Task<T> GetByIdAsync(Guid id)
         {
-            return Task.FromResult(DbContext.Set<T>().FirstOrDefault(x => x.Id == id));
+            var entity = await _dataContext.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
+
+            return entity;
         }
 
-        public Task CreateAsync(T entity)
+        public async Task<IEnumerable<T>> GetRangeByIdsAsync(List<Guid> ids)
         {
-            DbContext.Set<T>().Add(entity);
-            return SaveChanges();
+            var entities = await _dataContext.Set<T>().Where(x => ids.Contains(x.Id)).ToListAsync();
+            return entities;
         }
 
-        public Task UpdateAsync(T entity)
+        public async Task AddAsync(T entity)
         {
-            var oldEntity = DbContext.Set<T>().FirstOrDefault(x => x.Id == entity.Id);
-            oldEntity = entity;
-            return SaveChanges();
+            await _dataContext.Set<T>().AddAsync(entity);
+
+            await _dataContext.SaveChangesAsync();
         }
 
-        public Task RemoveAsync(Guid id)
+        public async Task UpdateAsync(T entity)
         {
-            var oldEntity = DbContext.Set<T>().Find(id);
-            DbContext.Set<T>().Remove(oldEntity);
-            return SaveChanges();
+            await _dataContext.SaveChangesAsync();
         }
 
-        public Task SaveChanges()
+        public async Task DeleteAsync(T entity)
         {
-            return DbContext.SaveChangesAsync();
+            _dataContext.Set<T>().Remove(entity);
+            await _dataContext.SaveChangesAsync();
         }
     }
 }

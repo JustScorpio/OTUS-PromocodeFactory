@@ -8,7 +8,7 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Data
 {
     public static class FakeDataFactory
     {
-        public static IEnumerable<Employee> Employees => new List<Employee>()
+        public static List<Employee> Employees => new List<Employee>()
         {
             new Employee()
             {
@@ -16,7 +16,7 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Data
                 Email = "owner@somemail.ru",
                 FirstName = "Иван",
                 LastName = "Сергеев",
-                RoleId = Roles.FirstOrDefault(x => x.Name == "Admin").Id,
+                Role = Roles.FirstOrDefault(x => x.Name == "Admin"),
                 AppliedPromocodesCount = 5
             },
             new Employee()
@@ -25,12 +25,12 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Data
                 Email = "andreev@somemail.ru",
                 FirstName = "Петр",
                 LastName = "Андреев",
-                RoleId = Roles.FirstOrDefault(x => x.Name == "PartnerManager").Id,
+                Role = Roles.FirstOrDefault(x => x.Name == "PartnerManager"),
                 AppliedPromocodesCount = 10
             },
         };
 
-        public static IEnumerable<Role> Roles => new List<Role>()
+        public static List<Role> Roles => new List<Role>()
         {
             new Role()
             {
@@ -45,8 +45,8 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Data
                 Description = "Партнерский менеджер"
             }
         };
-        
-        public static IEnumerable<Preference> Preferences => new List<Preference>()
+
+        public static List<Preference> Preferences => new List<Preference>()
         {
             new Preference()
             {
@@ -65,7 +65,7 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Data
             }
         };
 
-        public static IEnumerable<Customer> Customers
+        public static List<Customer> Customers
         {
             get
             {
@@ -78,12 +78,84 @@ namespace Otus.Teaching.PromoCodeFactory.DataAccess.Data
                         Email = "ivan_sergeev@mail.ru",
                         FirstName = "Иван",
                         LastName = "Петров",
-                        //TODO: Добавить предзаполненный список предпочтений
+                        Preferences = new List<CustomerPreference>()
+                        {
+                            new CustomerPreference()
+                            {
+                                CustomerId = customerId,
+                                PreferenceId = Guid.Parse("76324c47-68d2-472d-abb8-33cfa8cc0c84")
+                            },
+                            new CustomerPreference()
+                            {
+                                CustomerId = customerId,
+                                PreferenceId = Guid.Parse("ef7f299f-92d7-459f-896e-078ed53ef99c")
+                            }
+                        }
                     }
                 };
 
                 return customers;
             }
         }
+        
+        public static List<Partner> Partners => new List<Partner>()
+        {
+            new Partner()
+            {
+                Id = Guid.Parse("7d994823-8226-4273-b063-1a95f3cc1df8"),
+                Name = "Суперигрушки",
+                IsActive = true,
+                PartnerLimits = new List<PartnerPromoCodeLimit>()
+                {
+                    new PartnerPromoCodeLimit()
+                    {
+                        Id = Guid.Parse("e00633a5-978a-420e-a7d6-3e1dab116393"),
+                        CreateDate = new DateTime(2020,07,9),
+                        EndDate = new DateTime(2020,10,9),
+                        Limit = 100 
+                    }
+                }
+            },
+            new Partner()
+            {
+                Id = Guid.Parse("894b6e9b-eb5f-406c-aefa-8ccb35d39319"),
+                Name = "Каждому кота",
+                IsActive = true,
+                PartnerLimits = new List<PartnerPromoCodeLimit>()
+                {
+                    new PartnerPromoCodeLimit()
+                    {
+                        Id = Guid.Parse("c9bef066-3c5a-4e5d-9cff-bd54479f075e"),
+                        CreateDate = new DateTime(2020,05,3),
+                        EndDate = new DateTime(2020,10,15),
+                        CancelDate = new DateTime(2020,06,16),
+                        Limit = 1000 
+                    },
+                    new PartnerPromoCodeLimit()
+                    {
+                        Id = Guid.Parse("0e94624b-1ff9-430e-ba8d-ef1e3b77f2d5"),
+                        CreateDate = new DateTime(2020,05,3),
+                        EndDate = new DateTime(2020,10,15),
+                        Limit = 100 
+                    },
+                }
+            },
+            new Partner()
+            {
+                Id = Guid.Parse("0da65561-cf56-4942-bff2-22f50cf70d43"),
+                Name = "Рыба твоей мечты",
+                IsActive = false,
+                PartnerLimits = new List<PartnerPromoCodeLimit>()
+                {
+                    new PartnerPromoCodeLimit()
+                    {
+                        Id = Guid.Parse("0691bb24-5fd9-4a52-a11c-34bb8bc9364e"),
+                        CreateDate = new DateTime(2020,07,3),
+                        EndDate = new DateTime(2020,9,9),
+                        Limit = 100 
+                    }
+                }
+            },
+        };
     }
 }
