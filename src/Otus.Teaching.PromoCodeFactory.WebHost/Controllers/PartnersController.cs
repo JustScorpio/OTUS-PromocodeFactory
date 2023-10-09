@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Resource;
 using Microsoft.AspNetCore.Mvc;
 using Otus.Teaching.PromoCodeFactory.Core.Abstractions.Repositories;
 using Otus.Teaching.PromoCodeFactory.Core.Domain.PromoCodeManagement;
@@ -29,23 +30,49 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
         {
             var partners = await _partnersRepository.GetAllAsync();
 
-            var response = partners.Select(x => new PartnerResponse()
+            //This shit fell with misterious NullArgumentException
+            //var response = partners.Select(x => new PartnerResponse()
+            //{
+            //    Id = x.Id,
+            //    Name = x.Name,
+            //    NumberIssuedPromoCodes = x.NumberIssuedPromoCodes,
+            //    IsActive = true,
+            //    PartnerLimits = x.PartnerLimits
+            //        .Select(y => new PartnerPromoCodeLimitResponse()
+            //        {
+            //            Id = y.Id,
+            //            PartnerId = y.PartnerId,
+            //            Limit = y.Limit,
+            //            CreateDate = y.CreateDate.ToString("dd.MM.yyyy hh:mm:ss"),
+            //            EndDate = y.EndDate.ToString("dd.MM.yyyy hh:mm:ss"),
+            //            CancelDate = y.CancelDate?.ToString("dd.MM.yyyy hh:mm:ss"),
+            //        }).ToList()
+            //});
+
+            var response = new List<PartnerResponse>();
+            foreach (var partner in partners)
             {
-                Id = x.Id,
-                Name = x.Name,
-                NumberIssuedPromoCodes = x.NumberIssuedPromoCodes,
-                IsActive = true,
-                PartnerLimits = x.PartnerLimits
-                    .Select(y => new PartnerPromoCodeLimitResponse()
-                    {
-                        Id = y.Id,
-                        PartnerId = y.PartnerId,
-                        Limit = y.Limit,
-                        CreateDate = y.CreateDate.ToString("dd.MM.yyyy hh:mm:ss"),
-                        EndDate = y.EndDate.ToString("dd.MM.yyyy hh:mm:ss"),
-                        CancelDate = y.CancelDate?.ToString("dd.MM.yyyy hh:mm:ss"),
-                    }).ToList()
-            });
+                var partnerResponse = new PartnerResponse();
+                partnerResponse.Id = partner.Id;
+                partnerResponse.Name = partner.Name;
+                partnerResponse.NumberIssuedPromoCodes = partner.NumberIssuedPromoCodes;
+                partnerResponse.IsActive = partner.IsActive;
+                partnerResponse.PartnerLimits = new List<PartnerPromoCodeLimitResponse>();
+                foreach (var promocodeResponse in partner.PartnerLimits)
+                {
+                    var limitResponse = new PartnerPromoCodeLimitResponse();
+                    limitResponse.Id = promocodeResponse.Id;
+                    limitResponse.PartnerId = promocodeResponse.PartnerId;
+                    limitResponse.Limit = promocodeResponse.Limit;
+                    limitResponse.CreateDate = promocodeResponse.CreateDate.ToString("dd.MM.yyyy hh:mm:ss");
+                    limitResponse.EndDate = promocodeResponse.EndDate.ToString("dd.MM.yyyy hh:mm:ss");
+                    limitResponse.CancelDate = promocodeResponse.CancelDate?.ToString("dd.MM.yyyy hh:mm:ss");
+
+                    partnerResponse.PartnerLimits.Add(limitResponse);
+                }
+
+                response.Add(partnerResponse);
+            }
 
             return Ok(response);
         }
@@ -116,7 +143,9 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
             partner.PartnerLimits.Add(newLimit);
 
             await _partnersRepository.UpdateAsync(partner);
-            
+            //await _partnersLimitsRepository.AddAsync(newLimit);
+            //await _partnersLimitsRepository.UpdateAsync(activeLimit);
+
             return CreatedAtAction(nameof(GetPartnerLimitAsync), new {id = partner.Id, limitId = newLimit.Id}, null);
         }
         
@@ -144,6 +173,22 @@ namespace Otus.Teaching.PromoCodeFactory.WebHost.Controllers
             await _partnersRepository.UpdateAsync(partner);
 
             return NoContent();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> CreatePartnerAsync(CreatePartnerRequest request)
+        {
+            var partner = new Partner()
+            {
+                Name = request.Name,
+                NumberIssuedPromoCodes = 0,
+                IsActive = true,
+                PartnerLimits = new List<PartnerPromoCodeLimit>()
+            };
+
+            await _partnersRepository.AddAsync(partner);
+
+            return CreatedAtAction(nameof(GetPartnersAsync), new { id = partner.Id }, null);
         }
     }
 }

@@ -2,10 +2,8 @@
 
 namespace Otus.Teaching.PromoCodeFactory.Core.Domain.PromoCodeManagement
 {
-    public class PartnerPromoCodeLimit
+    public class PartnerPromoCodeLimit : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public Guid PartnerId { get; set; }
 
         public virtual Partner Partner { get; set; }

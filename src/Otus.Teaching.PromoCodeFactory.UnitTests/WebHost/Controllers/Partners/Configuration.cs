@@ -11,6 +11,7 @@ namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 {
     public static class Configuration
     {
+        //Have no idea dafaq is that. Its copied
         public static IServiceCollection GetServiceCollection(IConfigurationRoot configuration, IServiceCollection serviceCollection = null)
         {
             if (serviceCollection == null)

@@ -9,6 +9,7 @@ using Otus.Teaching.PromoCodeFactory.WebHost.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 {
@@ -16,9 +17,12 @@ namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
     {
         PartnersController partnersController;
 
-        public SetPartnerPromoCodeLimitAsyncTests(PartnersFixture fixture) 
+        IRepository<Partner> partnersRepo;
+
+        IRepository<PartnerPromoCodeLimit> limitsRepo;
+
+        public SetPartnerPromoCodeLimitAsyncTests(PartnersFixture fixture)
         {
-            //Dont really need it but at least has some practice
             partnersController = fixture.partnersController;
         }
 
@@ -80,7 +84,7 @@ namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 
             var guid = Guid.NewGuid(); //random guid
 
-            autoFixture.Customize<SetPartnerPromoCodeLimitRequest>(x => x.With(req => req.Limit,10));
+            autoFixture.Customize<SetPartnerPromoCodeLimitRequest>(x => x.With(req => req.Limit, 10));
             var request = autoFixture.Build<SetPartnerPromoCodeLimitRequest>().Create();
 
             await customController.SetPartnerPromoCodeLimitAsync(guid, request);
@@ -143,6 +147,48 @@ namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
             var result = await customController.SetPartnerPromoCodeLimitAsync(guid, request);
 
             Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public async void SetPartnerPromoCodeLimitAsync_EnsureLimit_Saved_In_DB()
+        {
+            var autoFixture = new Fixture();
+
+            //Create partner in DB
+            var partnerRequest = autoFixture.Create<CreatePartnerRequest>();
+            var createResult = await partnersController.CreatePartnerAsync(partnerRequest);
+
+            //Get created partner from DB
+            var getPartnerResult = (await partnersController.GetPartnersAsync()).Result as OkObjectResult;
+            var partnerResponse = (getPartnerResult.Value as List<PartnerResponse>).FirstOrDefault();
+            var partner = new Partner()
+            {
+                Id = partnerResponse.Id,
+                Name = partnerResponse.Name,
+                NumberIssuedPromoCodes = partnerResponse.NumberIssuedPromoCodes,
+                IsActive = partnerResponse.IsActive,
+                PartnerLimits = partnerResponse.PartnerLimits
+                    .Select(y => new PartnerPromoCodeLimit()
+                    {
+                        Id = y.Id,
+                        PartnerId = y.PartnerId,
+                        Limit = y.Limit,
+                        CreateDate = DateTime.Parse(y.CreateDate),
+                        EndDate = DateTime.Parse(y.EndDate),
+                        CancelDate = DateTime.Parse(y.CancelDate),
+                    }).ToList()
+            };
+
+            //Update partners limits
+            var request = autoFixture.Build<SetPartnerPromoCodeLimitRequest>().Create();
+            await partnersController.SetPartnerPromoCodeLimitAsync(partner.Id, request);
+
+            //Get partner once more
+            var anotherGetPartnerResult = (await partnersController.GetPartnersAsync()).Result as OkObjectResult;
+            var anotherPartnerResponse = (anotherGetPartnerResult.Value as List<PartnerResponse>).FirstOrDefault();
+
+            //Check if limit exists
+            Assert.NotEmpty(anotherPartnerResponse.PartnerLimits);
         }
     }
 }
