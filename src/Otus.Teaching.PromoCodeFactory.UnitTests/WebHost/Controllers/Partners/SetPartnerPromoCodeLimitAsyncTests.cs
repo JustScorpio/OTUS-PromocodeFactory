@@ -10,16 +10,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 
 namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 {
     public class SetPartnerPromoCodeLimitAsyncTests : IClassFixture<PartnersFixture>
     {
         PartnersController partnersController;
-
-        IRepository<Partner> partnersRepo;
-
-        IRepository<PartnerPromoCodeLimit> limitsRepo;
 
         public SetPartnerPromoCodeLimitAsyncTests(PartnersFixture fixture)
         {
@@ -36,7 +33,7 @@ namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 
             var result = await partnersController.SetPartnerPromoCodeLimitAsync(guid, request);
 
-            Assert.IsType<NotFoundResult>(result);
+            result.Should().BeOfType<NotFoundResult>();
         }
 
         [Fact]
@@ -59,7 +56,7 @@ namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 
             var result = await customController.SetPartnerPromoCodeLimitAsync(guid, request);
 
-            Assert.IsType<BadRequestObjectResult>(result);
+            result.Should().BeOfType<BadRequestObjectResult>();
         }
 
         [Theory]
@@ -89,7 +86,7 @@ namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 
             await customController.SetPartnerPromoCodeLimitAsync(guid, request);
 
-            Assert.Equal(0, partner.NumberIssuedPromoCodes);
+            partner.NumberIssuedPromoCodes.Should().Be(0);
         }
 
         [Fact]
@@ -116,7 +113,7 @@ namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 
             await customController.SetPartnerPromoCodeLimitAsync(guid, request);
 
-            Assert.NotNull(partnerLimit.CancelDate);
+            partnerLimit.CancelDate.Should().NotBeNull();
         }
 
         [Theory]
@@ -146,7 +143,7 @@ namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 
             var result = await customController.SetPartnerPromoCodeLimitAsync(guid, request);
 
-            Assert.IsType<BadRequestObjectResult>(result);
+            result.Should().BeOfType<BadRequestObjectResult>();
         }
 
         [Fact]
@@ -188,7 +185,7 @@ namespace Otus.Teaching.PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
             var anotherPartnerResponse = (anotherGetPartnerResult.Value as List<PartnerResponse>).FirstOrDefault();
 
             //Check if limit exists
-            Assert.NotEmpty(anotherPartnerResponse.PartnerLimits);
+            anotherPartnerResponse.PartnerLimits.Should().NotBeEmpty();
         }
     }
 }
